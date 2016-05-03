@@ -32,6 +32,7 @@ public abstract class Renderable {
         dead = 0;
         alive = true;
     }
+
     public Color getCurrentColor() {
         if (alive) {
             if (wasDead) {
@@ -50,25 +51,11 @@ public abstract class Renderable {
         }
     }
     public Color getTransparentColor() {
-        if (alive) {
-            if (wasDead) {
-                if (life < deadFadeTime)
-                    return Colors.interpolate(deadColor, color, deadFadeTime, life);
-                else
-                    return color;
-            }
-            return (color);
-        }
-        else {
-            if (dead < deadFadeTime)
-                return Colors.interpolate(color, deadColor, deadFadeTime, dead);
-            else
-                return deadColor;
-        }
+        Color c = getCurrentColor();
+        c.a = Transparency;
+        return c;
     }
 
     public abstract void render(Object o, boolean started);
-//    public abstract void render(ShapeRenderer shapeRenderer, boolean started);
 
-
-    }
+}
