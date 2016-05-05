@@ -1,7 +1,7 @@
 package com.iball.square_swipe;
 
 import com.badlogic.gdx.graphics.Color;
-import com.iball.square_swipe.maths.Functions;
+import com.iball.square_swipe.utils.Functions;
 
 /**
  * Created by isaiah on 2016-04-27.

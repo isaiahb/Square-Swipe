@@ -1,4 +1,4 @@
-package com.iball.square_swipe.maths;
+package com.iball.square_swipe.utils;
 
 /**
  * Created by isaiah on 2016-05-02.

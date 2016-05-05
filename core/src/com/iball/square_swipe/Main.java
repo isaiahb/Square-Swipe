@@ -25,20 +25,23 @@ public class Main extends Game {
 	public void create () {
 		batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-        currentScreen = new GameScreen(this);
-        setScreen(currentScreen);
 
         // freetype font
         FreeTypeFontGenerator openSans = new FreeTypeFontGenerator(Gdx.files.internal("OpenSans-Regular.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = (int)(16 * Gdx.graphics.getDensity());
         font16 = openSans.generateFont(parameter);
+
         parameter.size = (int)(50 * Gdx.graphics.getDensity());
         font50 = openSans.generateFont(parameter);
+
         parameter.size = (int)(24 * Gdx.graphics.getDensity());
         font24 = openSans.generateFont(parameter);
 
         preferences = Gdx.app.getPreferences(Title + " Preferences");
+
+        currentScreen = new GameScreen(this);
+        setScreen(currentScreen);
 	}
 
 	@Override

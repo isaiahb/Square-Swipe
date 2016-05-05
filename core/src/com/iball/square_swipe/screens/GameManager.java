@@ -8,10 +8,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.iball.square_swipe.Colors;
 import com.iball.square_swipe.Main;
-import com.iball.square_swipe.maths.Functions;
+import com.iball.square_swipe.renderables.enums.YAlignment;
+import com.iball.square_swipe.utils.Functions;
 import com.iball.square_swipe.renderables.Rectangle;
 import com.iball.square_swipe.Swipe;
 import com.iball.square_swipe.renderables.RectangleExplosion;
+import com.iball.square_swipe.renderables.Text;
 
 import java.util.ArrayList;
 
@@ -53,6 +55,11 @@ public class GameManager implements InputProcessor {
     int lifes = 0;
     int shotsFired  = 0;
 
+    Text title;
+    Text scoreText;
+    Text highscoreText;
+    Text hintText;
+
     void start() {
         started = true;
         rectangle.reset(); background.reset(); gameArea.reset();
@@ -79,13 +86,20 @@ public class GameManager implements InputProcessor {
     GameManager(Main main) {
         this.main = main;
         Gdx.input.setInputProcessor(this);
-
         mid = new Vector2(width/2, height/2);
         paddingPixels = (padding * width);
 
         int gameSize = (int)(width * (1 - 2 * padding));
         offset = gameSize / (float)gridSize;
         position = new Vector2();
+
+        title = new Text(this.main.font50, Main.Title, width/2, height - height/(height/50));
+        scoreText = new Text(this.main.font16, "Shots Fired " + 0, offset, title.position.y);
+        highscoreText = new Text(this.main.font16, "Highscore " + 0, width - offset, scoreText.position.y);
+
+        scoreText.setYAlignment(YAlignment.Top);
+        highscoreText.setYAlignment(YAlignment.Top);
+
 
         rectangle = new Rectangle(0, 0, offset, offset);
         rectangle.color = Colors.Clouds;
@@ -188,7 +202,7 @@ public class GameManager implements InputProcessor {
         for (int i = 0; i < shots.size(); i++) {
             if (rectangle.isCollide(shots.get(i))) {
                 shotsToRemove.add(shots.get(i));
-                explosions.add(new RectangleExplosion(shots.get(i), 30, (int)(offset/8f), 2f));
+                explosions.add(new RectangleExplosion(shots.get(i), 30, (int)(offset/8f), 2f, Colors.MidnightBlue, Colors.DarkPurple));
                 lifes--;
                 if (lifes < 0) endGame();
             }
@@ -259,9 +273,15 @@ public void updateExplosions(float delta) {
         main.batch.begin();
         float xOffset = Gdx.graphics.getPpiX()/5f;
         float yOffset = height - Gdx.graphics.getPpiY()/5f;
-        main.font16.draw(main.batch, "shots fired " + shotsFired, xOffset, yOffset);
-        main.font16.draw(main.batch, "highscore " + main.preferences.getInteger("highscore",  0), xOffset, yOffset - main.font16.getLineHeight());
+//        main.font16.draw(main.batch, "shots fired " + shotsFired, xOffset, yOffset);
+//        main.font16.draw(main.batch, "highscore " + main.preferences.getInteger("highscore",  0), xOffset, yOffset - main.font16.getLineHeight());
 
+        title.render(main.batch, true);
+        //highscoreText.setText("Highscore " + main.preferences.getInteger("highscore", 0));
+        highscoreText.render(main.batch, true);
+
+        //scoreText.setText("Shots Fired " + shotsFired);
+        scoreText.render(main.batch, true);
         main.batch.end();
     }
 
