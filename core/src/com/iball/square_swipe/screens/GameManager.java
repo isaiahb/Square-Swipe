@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.iball.square_swipe.Colors;
 import com.iball.square_swipe.Main;
+import com.iball.square_swipe.renderables.enums.XAlignment;
 import com.iball.square_swipe.renderables.enums.YAlignment;
 import com.iball.square_swipe.utils.Functions;
 import com.iball.square_swipe.renderables.Rectangle;
@@ -94,12 +95,16 @@ public class GameManager implements InputProcessor {
         position = new Vector2();
 
         title = new Text(this.main.font50, Main.Title, width/2, height - height/(height/50));
-        scoreText = new Text(this.main.font16, "Shots Fired " + 0, offset, title.position.y);
-        highscoreText = new Text(this.main.font16, "Highscore " + 0, width - offset, scoreText.position.y);
+        scoreText = new Text(this.main.font16, "Shots Fired " + 0, paddingPixels - offset/2f, title.position.y);
+        scoreText.position.y += scoreText.layout.height;
+        highscoreText = new Text(this.main.font16, "Highscore " + 0, width - (paddingPixels - offset/2f), scoreText.position.y);
+
 
         scoreText.setYAlignment(YAlignment.Top);
         highscoreText.setYAlignment(YAlignment.Top);
 
+        scoreText.setXAlignment(XAlignment.Left);
+        highscoreText.setXAlignment(XAlignment.Right);
 
         rectangle = new Rectangle(0, 0, offset, offset);
         rectangle.color = Colors.Clouds;
@@ -277,10 +282,10 @@ public void updateExplosions(float delta) {
 //        main.font16.draw(main.batch, "highscore " + main.preferences.getInteger("highscore",  0), xOffset, yOffset - main.font16.getLineHeight());
 
         title.render(main.batch, true);
-        //highscoreText.setText("Highscore " + main.preferences.getInteger("highscore", 0));
+        highscoreText.setText("Highscore " + main.preferences.getInteger("highscore", 0));
         highscoreText.render(main.batch, true);
 
-        //scoreText.setText("Shots Fired " + shotsFired);
+        scoreText.setText("Shots Fired " + shotsFired);
         scoreText.render(main.batch, true);
         main.batch.end();
     }
@@ -288,15 +293,20 @@ public void updateExplosions(float delta) {
     public void render() {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         main.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        //main.shapeRenderer.setColor(backgroundColor);
         background.render(main.shapeRenderer, true);
         renderGameArea(main.shapeRenderer);
+        main.shapeRenderer.end();
+
+        renderText();
+
+        main.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         renderSquare(main.shapeRenderer);
         renderShots(main.shapeRenderer);
         renderExplosions(main.shapeRenderer);
         main.shapeRenderer.end();
-        renderText();
+
 
     }
 

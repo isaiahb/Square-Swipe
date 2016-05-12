@@ -9,18 +9,20 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.iball.square_swipe.screens.GameScreen;
+import com.iball.square_swipe.screens.SplashScreen;
+import com.iball.square_swipe.utils.Functions;
 
 public class Main extends Game {
     public static int Width = (int)(1080 * 0.4);
     public static int Height = (int)(1920 * 0.4);
     public static String Title = "Square Swipe";
 
-
     public SpriteBatch batch;
     public ShapeRenderer shapeRenderer;
 	public Screen currentScreen;
     public BitmapFont font16, font24, font50;
     public Preferences preferences;
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -32,7 +34,9 @@ public class Main extends Game {
         parameter.size = (int)(16 * Gdx.graphics.getDensity());
         font16 = openSans.generateFont(parameter);
 
-        parameter.size = (int)(50 * Gdx.graphics.getDensity());
+        parameter.size = Functions.getFontSize(50);
+        System.out.println("size density " + parameter.size);
+
         font50 = openSans.generateFont(parameter);
 
         parameter.size = (int)(24 * Gdx.graphics.getDensity());
