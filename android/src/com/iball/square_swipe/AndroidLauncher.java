@@ -19,11 +19,11 @@ public class AndroidLauncher extends AndroidApplication implements LeadBolt {
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new Main(), config);
+		initialize(new Main(this), config);
 
 		if(savedInstanceState == null) {
 			// Initialize LeadBolt SDK with your api key
-			AppTracker.startSession(getApplicationContext(),APP_API_KEY,AppTracker.ENABLE_AUTO_CACHE);
+			AppTracker.startSession(getApplicationContext(), APP_API_KEY, AppTracker.ENABLE_AUTO_CACHE);
 		}
 		// cache LeadBolt Ad without showing it
 		AppTracker.loadModuleToCache(getApplicationContext(),LOCATION_CODE);
@@ -32,8 +32,8 @@ public class AndroidLauncher extends AndroidApplication implements LeadBolt {
 
 	@Override
 	public void showFullscreenAd() {
-		if(AppTracker.isAdReady(LOCATION_CODE)&&AppTracker.isInternetAvailable(this)) {
-			AppTracker.loadModule(getApplicationContext(),LOCATION_CODE);
+		if(AppTracker.isAdReady(LOCATION_CODE) && AppTracker.isInternetAvailable(this)) {
+			AppTracker.loadModule(getApplicationContext(), LOCATION_CODE);
 		}
 	}
 

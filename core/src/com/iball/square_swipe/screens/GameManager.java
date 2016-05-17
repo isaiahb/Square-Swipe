@@ -60,6 +60,7 @@ public class GameManager implements InputProcessor {
     Text scoreText;
     Text highscoreText;
     Text hintText;
+    int dies = 0;
 
     void start() {
         started = true;
@@ -78,7 +79,9 @@ public class GameManager implements InputProcessor {
             highscore = score;
             main.preferences.flush();
         }
+        dies++;
 
+        main.leadBolt.showFullscreenAd();
         //Todo save highscore
         //Todo display highscore and score
         //Todo display rate game and other apps buttons

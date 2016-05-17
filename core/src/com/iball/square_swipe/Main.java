@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.iball.square_swipe.screens.GameScreen;
 import com.iball.square_swipe.screens.SplashScreen;
+import com.iball.square_swipe.services.LeadBolt;
 import com.iball.square_swipe.utils.Functions;
 
 public class Main extends Game {
@@ -22,7 +23,11 @@ public class Main extends Game {
 	public Screen currentScreen;
     public BitmapFont font16, font24, font50;
     public Preferences preferences;
+    public LeadBolt leadBolt;
 
+    public Main(LeadBolt leadBolt) {
+        this.leadBolt = leadBolt;
+    }
 	@Override
 	public void create () {
 		batch = new SpriteBatch();

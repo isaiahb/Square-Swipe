@@ -4,6 +4,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.iball.square_swipe.Main;
 import com.iball.square_swipe.services.LeadBolt;
+import com.iball.square_swipe.services.LeadBoltAdapter;
 
 public class DesktopLauncher implements LeadBolt {
 	public static void main (String[] arg) {
@@ -11,8 +12,9 @@ public class DesktopLauncher implements LeadBolt {
         config.width = Main.Width;
         config.height = Main.Height;
         config.title = Main.Title;
+        LeadBoltAdapter leadBolt = new LeadBoltAdapter();
 
-		new LwjglApplication(new Main(), config);
+		new LwjglApplication(new Main(leadBolt), config);
 	}
 
 	@Override
