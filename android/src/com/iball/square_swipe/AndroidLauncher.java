@@ -11,7 +11,7 @@ import com.iball.square_swipe.services.LeadBolt;
 public class AndroidLauncher extends AndroidApplication implements LeadBolt {
 
 	// Leadbolt SDK configurations
-	private static final String APP_API_KEY 		    = "kI4kBXiLf71vsWvCo7qLATXTT7rvM2XU"; // change this to your App specific API KEY
+	private static final String APP_API_KEY 		    = "is2byYEVjbXiFjVjaYIt6sM4aEIqMWZ3"; // change this to your App specific API KEY
 	private static final String LOCATION_CODE		    = "inapp";
 	private static final String LOCATION_CODE_VIDEO 	= "video";
 
