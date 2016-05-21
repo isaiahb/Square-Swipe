@@ -334,7 +334,7 @@ public class GameManager implements InputProcessor {
             }  else if (shotsFired >= 50) {
                 createShot(0.5f);
                 createShot(0.5f);
-                if (Math.random() > 0.5) {
+                if (Math.random() > 0.45) {
                     createShot(0.5f);
                 } else {
                     shotsFired++;
