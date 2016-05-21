@@ -80,6 +80,8 @@ public class Text extends Renderable{
         batch.setColor(getCurrentColor());
 //        font.setColor(getCurrentColor());
         Vector2 p = getAlignmentPosition();
+
+        font.setColor(color);
         font.draw(batch, text, p.x, p.y);
         if (!started)
             batch.end();

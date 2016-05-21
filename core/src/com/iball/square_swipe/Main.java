@@ -21,9 +21,11 @@ public class Main extends Game {
     public SpriteBatch batch;
     public ShapeRenderer shapeRenderer;
 	public Screen currentScreen;
-    public BitmapFont font16, font24, font50;
+    public BitmapFont font16, font20, font50;
     public Preferences preferences;
     public LeadBolt leadBolt;
+    public static final String GooglePlayLink = "https://play.google.com/store/apps/developer?id=iball";
+
 
     public Main(LeadBolt leadBolt) {
         this.leadBolt = leadBolt;
@@ -44,8 +46,8 @@ public class Main extends Game {
 
         font50 = openSans.generateFont(parameter);
 
-        parameter.size = (int)(24 * Gdx.graphics.getDensity());
-        font24 = openSans.generateFont(parameter);
+        parameter.size = (int)(20 * Gdx.graphics.getDensity());
+        font20 = openSans.generateFont(parameter);
 
         preferences = Gdx.app.getPreferences(Title + " Preferences");
 

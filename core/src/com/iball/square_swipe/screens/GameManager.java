@@ -60,13 +60,22 @@ public class GameManager implements InputProcessor {
     Text scoreText;
     Text highscoreText;
     Text hintText;
+    Text rateText;
+    Text cheerText;
+
+
     int dies = 0;
+    int ads = 3; // game overs untill an advertisment is shown;
 
     void start() {
         started = true;
         rectangle.reset(); background.reset(); gameArea.reset();
         shotsFired = 0;
+        highscoreText.color = Colors.Clouds;
+        scoreText.color = Colors.Clouds;
+
     }
+
     public void endGame() {
         started = false;
         rectangle.alive = false; background.alive = false; gameArea.alive = false;
@@ -74,16 +83,18 @@ public class GameManager implements InputProcessor {
         first = false;
         int highscore = main.preferences.getInteger("highscore",  0);
         int score = shotsFired;
-        if (score > highscore) {
+        highscoreText.color = Colors.DarkGreen;
+        if (score >= highscore) {
             main.preferences.putInteger("highscore", score);
-            highscore = score;
             main.preferences.flush();
+            scoreText.color = Colors.DarkGreen;
         }
+
+        hintText.setText("Swipe Up To Play Again");
         dies++;
 
-        main.leadBolt.showFullscreenAd();
-        //Todo save highscore
-        //Todo display highscore and score
+        if (dies % ads == 0)
+            main.leadBolt.showFullscreenAd();
         //Todo display rate game and other apps buttons
     }
 
@@ -98,16 +109,21 @@ public class GameManager implements InputProcessor {
         position = new Vector2();
 
         title = new Text(this.main.font50, Main.Title, width/2, height - height/(height/50));
-        scoreText = new Text(this.main.font16, "Shots Fired " + 0, paddingPixels - offset/2f, title.position.y);
+        scoreText = new Text(this.main.font20, "Shots Fired " + 0, paddingPixels - offset/2f, title.position.y);
         scoreText.position.y += scoreText.layout.height;
-        highscoreText = new Text(this.main.font16, "Highscore " + 0, width - (paddingPixels - offset/2f), scoreText.position.y);
+        highscoreText = new Text(this.main.font20, "Highscore " + 0, width - (paddingPixels - offset/2f), scoreText.position.y);
 
+        hintText = new Text(this.main.font20, "Swipe Any Direction To Begin", width/2f, paddingPixels * 3.4f);
+        rateText = new Text(this.main.font16, "Swipe Down To Rate", width/2f, paddingPixels / 2);
 
         scoreText.setYAlignment(YAlignment.Top);
-        highscoreText.setYAlignment(YAlignment.Top);
-
         scoreText.setXAlignment(XAlignment.Left);
+        highscoreText.setYAlignment(YAlignment.Top);
         highscoreText.setXAlignment(XAlignment.Right);
+        hintText.setXAlignment(XAlignment.Center);
+        hintText.setYAlignment(YAlignment.Bottom);
+        rateText.setXAlignment(XAlignment.Center);
+        rateText.setYAlignment(YAlignment.Bottom);
 
         rectangle = new Rectangle(0, 0, offset, offset);
         rectangle.color = Colors.Clouds;
@@ -151,18 +167,67 @@ public class GameManager implements InputProcessor {
             }
         }
 
-
     }
+    public Swipe getSwipe(Vector2 start, Vector2 end) {
+        Vector2 delta = end.sub(start);
+        float m;
+        try {
+            m = delta.y/ delta.x;
+        } catch (Exception e) {
+            m = 10000;
+        }
+
+        if ((Math.abs(m) < 5/2f) && (Math.abs(m) > 2/5f)) {
+            //Diagonal swipe
+            if (delta.y < 0) {
+                if (delta.x > 0) {
+                    return Swipe.UpRight;
+                } else {
+                    return Swipe.UpLeft;
+                }
+            } else {
+                if (delta.x > 0) {
+                    return Swipe.DownRight;
+                } else {
+                    return Swipe.DownLeft;
+                }
+            }
+
+        } else  {
+            //Horizontal or Vertical Swipe
+            if(Math.abs(delta.y) > Math.abs(delta.x)) {
+                //up or down swiping
+                if(delta.y > 0) {
+                    return Swipe.Down;
+                } else {
+                    return Swipe.Up;
+                }
+
+            } else {
+                //left or right swiping
+                if(delta.x > 0) {
+                    return Swipe.Right;
+                } else {
+                    return Swipe.Left;
+                }
+            }
+        }
+    }
+
     public void move(Vector2 touchedUp) {
+        Swipe swipe = getSwipe(touchedDown, touchedUp);
+
         if (!started) {
             if (Colors.sameColors(rectangle.getCurrentColor(), rectangle.deadColor) || first) {
                 start();
-
+            }
+            if (swipe == Swipe.Down) {
+                Gdx.net.openURI(Main.GooglePlayLink);
             }
             return;
         }
 
-        Swipe swipe = swiped(touchedDown, touchedUp);
+//        Swipe swipe = swiped(touchedDown, touchedUp);
         position.add(swipe.direction);
         position.x = position.x > gridSize/2 ? gridSize/2 : position.x;
         position.x = position.x < -gridSize/2 ? -gridSize/2 : position.x;
@@ -198,7 +263,7 @@ public class GameManager implements InputProcessor {
         shot.position.set(x,y);
         Vector2 direction = randomGridSpot().sub(shot.position);
         direction.nor();
-        shot.velocity.set(direction.scl(speed));
+        shot.velocity.set(direction.scl(speed * speedMultiplier));
     }
 
     public void updateRectangle(float delta) {
@@ -216,7 +281,7 @@ public class GameManager implements InputProcessor {
             }
         }
     }
-public void updateExplosions(float delta) {
+    public void updateExplosions(float delta) {
         for (int i = 0; i < explosions.size(); i++) {
             explosions.get(i).update(delta);
             if (explosions.get(i).life >= explosions.get(i).maxLife) {
@@ -246,10 +311,38 @@ public void updateExplosions(float delta) {
             shotTimer -= delta;
 
         if (shotTimer <= 0) {
+
+
             shotTimer += shotTime;
-            createShot(1);
-            if (shotsFired > 10)
-                createShot(1);
+
+            if (shotsFired >= 2) {
+                createShot(0.75f);
+                if (Math.random() > 0.2) {
+                    createShot(0.76f);
+                } else {
+                    shotsFired++;
+                }
+            } else if (shotsFired >= 20) {
+                createShot(0.5f);
+                createShot(0.5f);
+                if (Math.random() > 0.25) {
+                    createShot(0.5f);
+                } else {
+                    shotsFired++;
+                }
+
+            }  else if (shotsFired >= 50) {
+                createShot(0.5f);
+                createShot(0.5f);
+                if (Math.random() > 0.5) {
+                    createShot(0.5f);
+                } else {
+                    shotsFired++;
+                }
+            } else {
+                createShot(1f);
+            }
+
         }
     }
 
@@ -290,6 +383,12 @@ public void updateExplosions(float delta) {
 
         scoreText.setText("Shots Fired " + shotsFired);
         scoreText.render(main.batch, true);
+        if (!started) {
+            hintText.render(main.batch, true);
+            rateText.render(main.batch, true);
+        }
+
+
         main.batch.end();
     }
 

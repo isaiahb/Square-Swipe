@@ -9,7 +9,12 @@ public enum Swipe {
     Left(-1, 0),
     Right(1, 0),
     Up(0, 1),
-    Down(0, -1);
+    Down(0, -1),
+
+    UpLeft(-1, 1),
+    UpRight(1, 1),
+    DownLeft(-1, -1),
+    DownRight(1, -1);
 
     public Vector2 direction;
     Swipe(int x, int y) {
